@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="el" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Important e-mails alert</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="dot" id="dot"></span>
+    <strong data-i18n="appName">Important e-mails alert</strong>
+  </div>
+  <nav class="tabs">
+    <button type="button" class="tab active" data-view="inbox" data-i18n="tabInbox">Inbox</button>
+    <button type="button" class="tab" data-view="read" data-i18n="tabRead">Read</button>
+    <button type="button" class="tab" data-view="spam" data-i18n="tabSpam">Spam</button>
+    <button type="button" class="tab" data-view="settings" data-i18n="tabSettings">Settings</button>
+    <button type="button" class="tab" data-view="logs" data-i18n="tabLogs">Logs</button>
+  </nav>
+  <div class="theme-switch" role="group" data-i18n-aria="themeAria">
+    <button type="button" data-theme-mode="light" data-i18n="themeLight">Light</button>
+    <button type="button" data-theme-mode="dark" data-i18n="themeDark">Dark</button>
+    <button type="button" data-theme-mode="system" data-i18n="themeSystem">System</button>
+  </div>
+  <div class="status" id="statusLine">—</div>
+</header>
+
+<main>
+  <section id="view-inbox" class="view">
+    <div class="toolbar">
+      <button type="button" id="pollBtn" class="primary" data-i18n="pollNow">Check now</button>
+      <button type="button" id="markAllBtn" class="ghost" data-i18n="markAllRead">Mark all read</button>
+      <label class="search">
+        <span class="sr-only" data-i18n="tabInbox">Inbox</span>
+        <input id="searchInbox" type="search" data-i18n-placeholder="searchUnread" placeholder="Search unread…" autocomplete="off">
+      </label>
+      <span class="hint" id="unreadHint"></span>
+    </div>
+    <div class="err" id="inboxErr"></div>
+    <ul id="mailList" class="mail-list"></ul>
+    <p class="empty" id="emptyInbox" data-i18n="emptyInbox">No unread important emails.</p>
+  </section>
+
+  <section id="view-read" class="view hidden">
+    <div class="toolbar">
+      <label class="search grow">
+        <span class="sr-only" data-i18n="tabRead">Read</span>
+        <input id="searchRead" type="search" data-i18n-placeholder="searchRead" placeholder="Search read…" autocomplete="off">
+      </label>
+      <span class="hint" id="readHint"></span>
+    </div>
+    <div class="err" id="readErr"></div>
+    <ul id="readList" class="mail-list"></ul>
+    <p class="empty" id="emptyRead" data-i18n="emptyRead">No read emails.</p>
+  </section>
+
+  <section id="view-spam" class="view hidden">
+    <div class="toolbar">
+      <label class="search grow">
+        <span class="sr-only" data-i18n="tabSpam">Spam</span>
+        <input id="searchSpam" type="search" data-i18n-placeholder="searchSpam" placeholder="Search spam…" autocomplete="off">
+      </label>
+      <span class="hint" id="spamHint"></span>
+    </div>
+    <div class="err" id="spamErr"></div>
+    <ul id="spamList" class="mail-list"></ul>
+    <p class="empty" id="emptySpam" data-i18n="emptySpam">No spam emails.</p>
+
+    <div class="blocked-panel">
+      <h2 data-i18n="blockedSenders">Blocked senders</h2>
+      <ul id="blockedList" class="blocked-list"></ul>
+      <p class="empty small" id="emptyBlocked" data-i18n="noBlocked">No blocked senders.</p>
+    </div>
+  </section>
+
+  <section id="view-settings" class="view hidden">
+    <form id="settingsForm" class="settings">
+      <h2 data-i18n="appearance">Appearance</h2>
+      <div class="row2">
+        <label><span data-i18n="language">Language</span>
+          <select name="ui_lang">
+            <option value="el">Ελληνικά</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+        <label><span data-i18n="theme">Theme</span>
+          <select name="theme_mode">
+            <option value="light" data-i18n="themeLight">Light</option>
+            <option value="dark" data-i18n="themeDark">Dark</option>
+            <option value="system" data-i18n="themeSystem">System</option>
+          </select>
+        </label>
+      </div>
+
+      <h2 data-i18n="popAccount">POP account</h2>
+      <label><span data-i18n="host">Server</span>
+        <input name="pop_host" autocomplete="off" spellcheck="false" placeholder="mail.example.com" required>
+      </label>
+      <div class="row2">
+        <label><span data-i18n="port">Port</span>
+          <input name="pop_port" type="number" min="1" max="65535" value="995">
+        </label>
+        <label class="check">
+          <input name="pop_tls" type="checkbox" checked>
+          <span data-i18n="tls">TLS (POP3S)</span>
+        </label>
+      </div>
+      <label><span data-i18n="user">User / email</span>
+        <input name="pop_user" autocomplete="username" spellcheck="false" required>
+      </label>
+      <label><span data-i18n="password">Password</span>
+        <input name="pop_password" type="password" autocomplete="current-password" placeholder="">
+        <span class="field-hint" id="passwordHint"></span>
+      </label>
+
+      <h2 data-i18n="slack">Slack</h2>
+      <label class="check">
+        <input name="slack_enabled" type="checkbox" checked>
+        <span data-i18n="slackEnabled">Send to a Slack channel</span>
+      </label>
+      <label><span data-i18n="slackWebhook">Incoming Webhook URL</span>
+        <input name="slack_webhook" autocomplete="off" spellcheck="false" placeholder="https://hooks.slack.com/services/…">
+      </label>
+
+      <h2 data-i18n="timing">Timing</h2>
+      <div class="row2">
+        <label><span data-i18n="pollInterval">Check every (sec.)</span>
+          <input name="poll_interval_sec" type="number" min="15" value="60">
+        </label>
+        <label><span data-i18n="notifyRepeat">Repeat notification (sec.)</span>
+          <input name="notify_repeat_sec" type="number" min="30" value="120">
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" data-i18n="save">Save</button>
+        <button type="button" id="testPopBtn" class="ghost" data-i18n="testConnection">Test connection</button>
+      </div>
+      <div class="err" id="settingsErr"></div>
+      <div class="ok" id="settingsOk"></div>
+    </form>
+  </section>
+
+  <section id="view-logs" class="view hidden">
+    <div class="toolbar">
+      <button type="button" id="refreshLogsBtn" data-i18n="refresh">Refresh</button>
+      <button type="button" id="clearLogsBtn" class="ghost" data-i18n="clear">Clear</button>
+      <label class="check auto-scroll">
+        <input type="checkbox" id="logsFollow" checked>
+        <span data-i18n="autoScroll">Auto-scroll</span>
+      </label>
+    </div>
+    <pre id="logView" class="log-view" aria-live="polite"></pre>
+  </section>
+</main>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

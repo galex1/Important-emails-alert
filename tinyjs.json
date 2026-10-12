@@ -1,0 +1,10 @@
+{
+  "name": "important-emails-alert",
+  "title": "Important e-mails alert",
+  "size": "880x620",
+  "id": "com.galex.important-emails-alert",
+  "version": "0.2.0",
+  "minTinyjsVersion": "0.50.1",
+  "activation": "accessory",
+  "icon": "icon.png"
+}
