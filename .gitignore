@@ -2,5 +2,5 @@
 dist/
 *.db
 .DS_Store
-.cursor
+.cursor/*
 
