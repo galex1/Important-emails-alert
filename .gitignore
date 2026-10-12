@@ -1,7 +1,9 @@
 .build/
 dist/
-*.db
-.DS_Store
 .cursor/
 .cursor/rules/
+*.db
+.DS_Store
+
+
 
